@@ -12,25 +12,68 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5005f6f5cb6104245847f804183182cf, type: 3}
   m_Name: Shape
   m_EditorClassIdentifier: 
-  planetRadius: 1.94
+  planetRadius: 3
   noiseLayers:
   - enabled: 1
     useFirstLayerAsMask: 0
     noiseSettings:
-      strength: 0.15
-      numLayers: 4
-      baseRoughness: 0.6
-      roughness: 3.95
-      persistence: 0.23
-      centre: {x: 0.68, y: 0, z: 0}
-      minValue: 0.67
+      filterType: 0
+      simpleNoiseSettings:
+        strength: 0.01
+        numLayers: 8
+        baseRoughness: 1
+        roughness: 5
+        persistence: 0.3
+        centre: {x: 1.42, y: 0.46, z: 0}
+        minValue: 0.8
+      ridgidNoiseSettings:
+        strength: 1
+        numLayers: 1
+        baseRoughness: 1
+        roughness: 2
+        persistence: 0.5
+        centre: {x: 0, y: 0, z: 0}
+        minValue: 0
+        weightMultiplier: 0.8
   - enabled: 1
     useFirstLayerAsMask: 1
     noiseSettings:
-      strength: 0.3
-      numLayers: 6
-      baseRoughness: 1.49
-      roughness: 2.34
-      persistence: 0.54
-      centre: {x: -0.54, y: 1.09, z: 0}
-      minValue: 1.47
+      filterType: 0
+      simpleNoiseSettings:
+        strength: 1
+        numLayers: 8
+        baseRoughness: 3
+        roughness: 2
+        persistence: 1
+        centre: {x: 0.05, y: 0.66, z: 0}
+        minValue: 4.02
+      ridgidNoiseSettings:
+        strength: 1
+        numLayers: 1
+        baseRoughness: 1
+        roughness: 2
+        persistence: 0.5
+        centre: {x: 0, y: 0, z: 0}
+        minValue: 0
+        weightMultiplier: 0.8
+  - enabled: 1
+    useFirstLayerAsMask: 1
+    noiseSettings:
+      filterType: 1
+      simpleNoiseSettings:
+        strength: 1
+        numLayers: 1
+        baseRoughness: 1
+        roughness: 2
+        persistence: 0.5
+        centre: {x: 0, y: 0, z: 0}
+        minValue: 0
+      ridgidNoiseSettings:
+        strength: 5
+        numLayers: 7
+        baseRoughness: 1
+        roughness: 1
+        persistence: 1
+        centre: {x: -16.31, y: 10.1, z: 0.04}
+        minValue: 0
+        weightMultiplier: 0.8
