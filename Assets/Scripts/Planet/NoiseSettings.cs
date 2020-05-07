@@ -17,7 +17,7 @@ public class NoiseSettings
 	public class SimpleNoiseSettings
 	{
 		public float strength = 1;
-		[Range(1, 8)]
+		[Range(1, 16)]
 		public int numLayers = 1;
 		public float baseRoughness = 1;
 		public float roughness = 2;

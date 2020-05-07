@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Planet : MonoBehaviour
 {
+	const int numberOfTerrainFaces = 24;
+
 	[Range(2, 256)]
 	public int resolution = 10;
 	public bool autoUpdate = true;
@@ -29,16 +31,15 @@ public class Planet : MonoBehaviour
 	{
 		shapeGenerator.UpdateSettings(shapeSettings);
 		colorGenerator.UpdateSettings(colorSettings);
-
 		if (meshFilters == null || meshFilters.Length == 0)
 		{
-			meshFilters = new MeshFilter[6];
+			meshFilters = new MeshFilter[numberOfTerrainFaces];
 		}
-		terrainFaces = new TerrainFace[6];
+		terrainFaces = new TerrainFace[numberOfTerrainFaces];
 
 		Vector3[] directions = { Vector3.up, Vector3.down, Vector3.left, Vector3.right, Vector3.forward, Vector3.back };
 
-		for (int i = 0; i < 6; i++)
+		for (int i = 0; i < numberOfTerrainFaces; i++)
 		{
 			if (meshFilters[i] == null)
 			{ 
@@ -51,8 +52,10 @@ public class Planet : MonoBehaviour
 			}
 			meshFilters[i].GetComponent<MeshRenderer>().sharedMaterial = colorSettings.planetMaterial;
 
-			terrainFaces[i] = new TerrainFace(shapeGenerator, meshFilters[i].sharedMesh, resolution, directions[i]);
-			bool renderFace = faceRenderMask == FaceRenderMask.All || (int)faceRenderMask - 1 == i;
+			int subfaceIndex = i % 4; // subfaces
+
+			terrainFaces[i] = new TerrainFace(shapeGenerator, meshFilters[i].sharedMesh, resolution, directions[i/4], subfaceIndex);
+			bool renderFace = faceRenderMask == FaceRenderMask.All || (int)faceRenderMask - 1 == i / 4;
 			meshFilters[i].gameObject.SetActive(renderFace);
 		}
 	}
@@ -83,7 +86,7 @@ public class Planet : MonoBehaviour
 
 	void GenerateMesh()
 	{
-		for(int i = 0;i < 6; i++)
+		for(int i = 0;i < numberOfTerrainFaces; i++)
 		{
 			if (meshFilters[i].gameObject.activeSelf)
 			{
@@ -96,7 +99,7 @@ public class Planet : MonoBehaviour
 	void GenerateColors()
 	{
 		colorGenerator.UpdateColors();
-		for (int i = 0; i < 6; i++)
+		for (int i = 0; i < numberOfTerrainFaces; i++)
 		{
 			if (meshFilters[i].gameObject.activeSelf)
 			{
