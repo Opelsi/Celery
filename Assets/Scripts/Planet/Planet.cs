@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Planet : MonoBehaviour
 {
+	[Range(1,6)]
+	public int levelOfDetail;
 	[Range(0,4)]
 	public int subfaceLevel = 0;
 	int numberOfTerrainFaces = 6;
@@ -28,6 +30,11 @@ public class Planet : MonoBehaviour
 	[SerializeField,HideInInspector]
 	MeshFilter[] meshFilters;
 	TerrainFace[] terrainFaces;
+
+	private void Start()
+	{
+		GeneratePlanet();
+	}
 
 	void Initialize()
 	{
@@ -105,7 +112,6 @@ public class Planet : MonoBehaviour
 
 	void GenerateMesh()
 	{
-		int levelOfDetail = 1;//1..6
 		for(int i = 0;i < numberOfTerrainFaces; i++)
 		{
 			if (meshFilters[i].gameObject.activeSelf)
@@ -123,7 +129,7 @@ public class Planet : MonoBehaviour
 		{
 			if (meshFilters[i].gameObject.activeSelf)
 			{
-				terrainFaces[i].UpdateUVs(colorGenerator);
+				terrainFaces[i].UpdateUVs(colorGenerator,levelOfDetail);
 			}
 		}
 	}
