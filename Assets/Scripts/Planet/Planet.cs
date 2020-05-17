@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class Planet : MonoBehaviour
 {
-	const int numberOfTerrainFaces = 24;
+	[Range(0,4)]
+	public int subfaceLevel = 0;
+	int numberOfTerrainFaces = 6;
 
 	[Range(2, 256)]
-	public int resolution = 10;
+	public int resolution = 10;//61
 	public bool autoUpdate = true;
 	public enum FaceRenderMask {All, Top, Bottom, Left, Right, Front, Back };
 	public FaceRenderMask faceRenderMask;
@@ -29,8 +31,25 @@ public class Planet : MonoBehaviour
 
 	void Initialize()
 	{
+		int subfaceCount = (int)Mathf.Pow(2, subfaceLevel);
+		numberOfTerrainFaces = 6 * (subfaceCount*subfaceCount);
 		shapeGenerator.UpdateSettings(shapeSettings);
 		colorGenerator.UpdateSettings(colorSettings);
+		if (meshFilters != null)
+		{
+			if (meshFilters.Length != numberOfTerrainFaces)
+			{
+				for (int i = 0; i < meshFilters.Length; i++)
+				{
+					if (meshFilters[i] != null)
+					{
+						DestroyImmediate(meshFilters[i].sharedMesh);
+						DestroyImmediate(meshFilters[i]);
+					}
+				}
+				meshFilters = new MeshFilter[numberOfTerrainFaces];
+			}
+		}
 		if (meshFilters == null || meshFilters.Length == 0)
 		{
 			meshFilters = new MeshFilter[numberOfTerrainFaces];
@@ -52,10 +71,10 @@ public class Planet : MonoBehaviour
 			}
 			meshFilters[i].GetComponent<MeshRenderer>().sharedMaterial = colorSettings.planetMaterial;
 
-			int subfaceIndex = i % 4; // subfaces
+			int subfaceIndex = i % (subfaceCount * subfaceCount); // subfaces
 
-			terrainFaces[i] = new TerrainFace(shapeGenerator, meshFilters[i].sharedMesh, resolution, directions[i/4], subfaceIndex);
-			bool renderFace = faceRenderMask == FaceRenderMask.All || (int)faceRenderMask - 1 == i / 4;
+			terrainFaces[i] = new TerrainFace(shapeGenerator, meshFilters[i].sharedMesh, resolution, directions[i/ (subfaceCount * subfaceCount)], subfaceIndex , subfaceCount);
+			bool renderFace = faceRenderMask == FaceRenderMask.All || (int)faceRenderMask - 1 == i / (subfaceCount * subfaceCount);
 			meshFilters[i].gameObject.SetActive(renderFace);
 		}
 	}
@@ -86,11 +105,12 @@ public class Planet : MonoBehaviour
 
 	void GenerateMesh()
 	{
+		int levelOfDetail = 1;//1..6
 		for(int i = 0;i < numberOfTerrainFaces; i++)
 		{
 			if (meshFilters[i].gameObject.activeSelf)
 			{
-				terrainFaces[i].ConstructMesh();
+				terrainFaces[i].ConstructMesh(levelOfDetail);
 			}
 		}
 		colorGenerator.UpdateElevation(shapeGenerator.elevationMinMax);
